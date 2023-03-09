@@ -1,0 +1,193 @@
+app.js
+
+    <Header></Header>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/books">Movielist</Link>
+          </li>
+        </ul>
+      </nav>
+      <Routes>
+        <Route path='/' element={<Home />}> </Route>
+        <Route path='/books' element={<MovieDetails />}> </Route>
+        <Route path='/books/:id' element={<Book />}> </Route>
+        <Route path="*" element={<PageNotFound />}> </Route>
+      </Routes>
+      index.js
+
+      <BrowserRouter>
+    <App />
+  </BrowserRouter>
+
+  moviedetails.js
+  <Link to="/books/1">book1</Link>
+<Link to="/books/2">book2</Link>
+
+book.js
+function Book() {
+    const {id} = useParams()
+  return (
+    <div>
+    <h1>book {id}</h1>
+    </div>
+  )
+}
+
+app.js
+routing another method
+<Routes>
+        <Route path='/' element={<Home />}> </Route>
+        <Route path='/books'>
+          <Route index element={<MovieDetails/>}/>
+          <Route path=':id' element={<Book/>}/>
+        </Route>
+        <Route path="*" element={<PageNotFound />}> </Route>
+      </Routes>
+
+      using outelet
+app.js changes
+
+       <Routes>
+        <Route path='/' element={<Home />}> </Route>
+        <Route path='/books' element={<Booklayout/>}>
+          <Route index element={<MovieDetails/>}/>
+          <Route path=':id' element={<Book/>}/>
+        </Route>
+        <Route path="*" element={<PageNotFound />}> </Route>
+      </Routes>
+
+
+      Booklayout.js
+ <div>
+
+<Link to="/books/1">book1</Link>
+<Link to="/books/2">book2</Link>
+<Outlet/>
+      
+    </div>
+
+Booklayout.js
+useoutletcontext
+<Link to="/books/1">book1</Link>
+<Link to="/books/2">book2</Link>
+<Outlet context={{hello:"helloworld"}}/>
+books.js
+function Book() {
+    const {id} = useParams()
+    const obj =useOutletContext()
+  return (
+    <div>
+    <h1>book {id} {obj.hello}</h1>
+    </div>
+  )
+}
+
+
+adding extra contentes to 
+  <Routes>
+    <Route path="/books" element={<h1>eeee</h1>}>
+    </Route>
+    </Routes>
+add specific location
+  <Routes location='/books'>
+    <Route path="/books" element={<h1>eeee</h1>}>
+    </Route>
+    </Routes>
+
+
+    add my own Routes
+
+    app.js
+    <Routes>
+        <Route path='/' element={<Home />}> </Route>
+        <Route path='/books/*' element={<Bookroutes/>}>
+          
+        </Route>
+        <Route path="*" element={<PageNotFound />}> </Route>
+      </Routes>
+
+      bookroutes.js
+      <Booklayout/>
+        <Routes>
+          <Route index element={<MovieDetails/>}/>
+          <Route path=':id' element={<Book/>}/>
+
+          </Routes>
+
+          book.js
+
+          function Book() {
+    const {id} = useParams()
+   
+  return (
+    <div>
+    <h1>book {id} </h1>
+    </div>
+  )
+}
+
+
+
+another way
+
+bookroutes.js
+   <div>
+       
+        <Routes>
+        <Route element={ <Booklayout/>}>
+          <Route index element={<MovieDetails/>}/>
+          <Route path=':id' element={<Book/>}/>
+</Route>
+    </Routes>
+    </div>
+
+book.js
+function Book() {
+    const {id} = useParams()
+   const obj=useOutletContext()
+  return (
+    <div>
+    <h1>book {id} {obj.hello} </h1>
+    </div>
+  )
+}
+
+
+.Home.js
+import React, { useEffect } from 'react'
+import MovieListing from '../MovieList/MovieListing'
+import movieApi from '../../common/apis/movieApi'
+import { APIKey } from '../../common/apis/MovieApiKey'
+function Home() {
+
+  useEffect(() => {
+    const movieText = "Harry"
+    const fetchData = async () => {
+      const response = await movieApi.get(
+        `?apikey=${APIKey}&s=${movieText}&type=movie`
+      )
+        .catch((err) => {
+          console.log("Errors",err);
+        })
+      console.log("Response",response);
+    }
+    fetchData()
+  }, [])
+
+  return (
+    <div>
+      <div className='banner-img'>
+        <MovieListing />
+
+      </div>
+
+
+
+    </div>
+  )
+}
+
